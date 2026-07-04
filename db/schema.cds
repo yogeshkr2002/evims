@@ -58,6 +58,16 @@ entity Invoices : cuid, managed {
                                   else 0
                                 end;
 
+  canSubmit         : Boolean = (
+    status = 'DRAFT'
+  );
+  canApprove        : Boolean = (
+    status = 'SUBMITTED'
+  );
+  canReject         : Boolean = (
+    status = 'SUBMITTED'
+  );
+
   submittedBy       : String(50);
   submittedAt       : Timestamp;
 
