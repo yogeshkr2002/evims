@@ -1,0 +1,11 @@
+ID,invoice_ID,fileName,fileSize,mimeType,uploadedBy,uploadedAt,url
+40000000-0000-4000-8000-000000000001,20000000-0000-4000-8000-000000000001,po_reference.pdf,102400,application/pdf,manager,2026-06-01T08:00:00Z,/files/po_reference.pdf
+40000000-0000-4000-8000-000000000002,20000000-0000-4000-8000-000000000002,contract_copy.pdf,204800,application/pdf,admin,2026-06-02T08:10:00Z,/files/contract_copy.pdf
+40000000-0000-4000-8000-000000000003,20000000-0000-4000-8000-000000000006,delivery_note.pdf,51200,application/pdf,manager,2026-06-06T09:00:00Z,/files/delivery_note.pdf
+40000000-0000-4000-8000-000000000004,20000000-0000-4000-8000-000000000007,rental_agreement.docx,153600,application/vnd.openxmlformats-officedocument.wordprocessingml.document,admin,2026-06-07T10:00:00Z,/files/rental_agreement.docx
+40000000-0000-4000-8000-000000000005,20000000-0000-4000-8000-000000000008,license_invoice.pdf,76800,application/pdf,manager,2026-06-08T08:30:00Z,/files/license_invoice.pdf
+40000000-0000-4000-8000-000000000006,20000000-0000-4000-8000-000000000011,verification_report.pdf,102400,application/pdf,admin,2026-06-01T10:00:00Z,/files/verification_report.pdf
+40000000-0000-4000-8000-000000000007,20000000-0000-4000-8000-000000000012,site_photo.png,307200,image/png,manager,2026-06-05T08:45:00Z,/files/site_photo.png
+40000000-0000-4000-8000-000000000008,20000000-0000-4000-8000-000000000013,service_checklist.xlsx,45056,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,admin,2026-06-08T08:15:00Z,/files/service_checklist.xlsx
+40000000-0000-4000-8000-000000000009,20000000-0000-4000-8000-000000000017,steel_grade_cert.pdf,88000,application/pdf,manager,2026-06-15T08:00:00Z,/files/steel_grade_cert.pdf
+40000000-0000-4000-8000-000000000010,20000000-0000-4000-8000-000000000019,rent_receipt.jpg,64000,image/jpeg,manager,2026-06-18T08:00:00Z,/files/rent_receipt.jpg

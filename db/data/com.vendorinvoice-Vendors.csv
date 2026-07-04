@@ -1,0 +1,11 @@
+ID,vendorName,email,phone,addressLine1,city,country,currency,taxId,externalSystemId,status,assignedManager
+10000000-0000-4000-8000-000000000001,Acme Corp,contact@acmecorp.com,+1-202-555-0101,100 Market St,New York,US,USD,TAX-US-001,SUP-1001,APPROVED,manager
+10000000-0000-4000-8000-000000000002,Tech Solutions Ltd,info@techsolutions.co.uk,+44-20-7946-0102,25 Baker Street,London,GB,EUR,TAX-UK-002,SUP-1002,APPROVED,
+10000000-0000-4000-8000-000000000003,Global Supplies,sales@globalsupplies.in,+91-22-6654-0103,MG Road,Mumbai,IN,INR,TAX-IN-003,SUP-1003,APPROVED,
+10000000-0000-4000-8000-000000000004,New Vendor Inc,hello@newvendor.com,+1-202-555-0104,55 Broad St,Chicago,US,USD,TAX-US-004,SUP-1004,PENDING,
+10000000-0000-4000-8000-000000000005,Quality Parts,order@qualityparts.de,+49-30-1234-0105,Alexanderplatz 5,Berlin,DE,EUR,TAX-DE-005,SUP-1005,APPROVED,
+10000000-0000-4000-8000-000000000006,Supply Chain Co,contact@supplychainco.uk,+44-161-555-0106,10 Deansgate,Manchester,GB,GBP,TAX-UK-006,SUP-1006,APPROVED,
+10000000-0000-4000-8000-000000000007,Materials Plus,info@materialsplus.ca,+1-416-555-0107,200 Bay St,Toronto,CA,USD,TAX-CA-007,SUP-1007,REJECTED,
+10000000-0000-4000-8000-000000000008,Service Provider,support@serviceprovider.au,+61-2-5550-0108,50 George St,Sydney,AU,AUD,TAX-AU-008,SUP-1008,APPROVED,
+10000000-0000-4000-8000-000000000009,Industrial Goods,contact@industrialgoods.fr,+33-1-4550-0109,12 Rue de Rivoli,Paris,FR,EUR,TAX-FR-009,SUP-1009,PENDING,
+10000000-0000-4000-8000-000000000010,Equipment Rental,rentals@equiprental.com,+1-202-555-0110,300 Main St,Houston,US,USD,TAX-US-010,SUP-1010,APPROVED,

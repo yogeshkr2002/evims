@@ -11,5 +11,18 @@
   "scripts": {
     "start": "cds-serve"
   },
-  "private": true
+  "private": true,
+"cds": {
+  "requires": {
+    "auth": {
+      "kind": "mocked",
+      "users": {
+        "admin": { "password": "admin", "roles": ["Admin"] },
+        "manager": { "password": "manager", "roles": ["VendorManager"] },
+        "approver": { "password": "approver", "roles": ["Approver"] },
+        "viewer": { "password": "viewer", "roles": ["Viewer"] }
+      }
+    }
+  }
+}
 }
