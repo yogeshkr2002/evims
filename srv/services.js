@@ -5,18 +5,50 @@ module.exports = cds.service.impl(async function () {
   const { Vendors, Invoices, InvoiceItems, ApprovalHistory } = this.entities;
 
   // ==================== AUTO-CALCULATE LINE ITEM TOTAL ====================
-  this.before(['CREATE', 'UPDATE'], 'InvoiceItems', (req) => {
-    const { quantity, unitPrice } = req.data;
+  this.before(['CREATE', 'UPDATE'], 'InvoiceItems', async (req) => {
+    const { description, quantity, unitPrice, invoice_ID } = req.data;
+
+    // Validation: description
+    if (description !== undefined && (!description || !description.trim())) {
+      return req.error(400, 'Line item description is required');
+    }
+    if (description && description.length > 255) {
+      return req.error(400, 'Description cannot exceed 255 characters');
+    }
+
+    // Validation: quantity > 0
+    if (quantity !== undefined && quantity <= 0) {
+      return req.error(400, 'Quantity must be greater than zero');
+    }
+
+    // Validation: unitPrice > 0
+    if (unitPrice !== undefined && unitPrice <= 0) {
+      return req.error(400, 'Unit price must be greater than zero');
+    }
+
+    // Auto-calculate total
     if (quantity != null && unitPrice != null) {
       req.data.totalAmount = quantity * unitPrice;
+    }
+
+    // Restriction: only allowed when invoice is in DRAFT status
+    if (invoice_ID) {
+      const invoice = await SELECT.one.from(Invoices).where({ ID: invoice_ID });
+      if (invoice && invoice.status !== 'DRAFT') {
+        return req.error(400, 'Line items can only be modified while invoice is in DRAFT status');
+      }
+      // Restriction: only creator or Admin can add line items
+      if (invoice && !req.user.is('Admin') && invoice.createdBy !== req.user.id) {
+        return req.error(403, 'You do not have permission to modify line items for this invoice');
+      }
     }
   });
 
   // ==================== INVOICE CREATION VALIDATIONS ====================
   this.before('CREATE', 'Invoices', async (req) => {
-    const { vendor_ID, invoiceDate, amount } = req.data;
+    const { vendor_ID, invoiceDate, dueDate, amount } = req.data;
 
-    // Rule 1: Vendor must be APPROVED
+    // Rule 1: Vendor must be APPROVED (also covers rule 10 - DELETED vendors blocked)
     if (vendor_ID) {
       const vendor = await SELECT.one.from(Vendors).where({ ID: vendor_ID });
       if (!vendor) {
@@ -24,6 +56,13 @@ module.exports = cds.service.impl(async function () {
       }
       if (vendor.status !== 'APPROVED') {
         return req.error(400, 'Please select an approved vendor');
+      }
+
+      // Row-level security: VendorManager can only create for their assigned vendor
+      if (req.user.is('VendorManager') && !req.user.is('Admin')) {
+        if (vendor.assignedManager !== req.user.id) {
+          return req.error(403, 'You can only create invoices for your assigned vendors');
+        }
       }
     }
 
@@ -38,6 +77,11 @@ module.exports = cds.service.impl(async function () {
       if (invoiceDate > today) {
         return req.error(400, 'Invoice date cannot be in the future');
       }
+    }
+
+    // Due date must be >= invoice date
+    if (invoiceDate && dueDate && dueDate < invoiceDate) {
+      return req.error(400, 'Due date must be on or after invoice date');
     }
 
     // Rule 7: Invoice number must be unique per vendor
