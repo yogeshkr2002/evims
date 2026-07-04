@@ -1,0 +1,1 @@
+using { API_BUSINESS_PARTNER as S4 } from './external/API_BUSINESS_PARTNER';

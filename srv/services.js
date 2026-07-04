@@ -172,9 +172,45 @@ module.exports = cds.service.impl(async function () {
     return SELECT.one.from(Invoices).where({ ID: invoiceID });
   });
 
-  // ==================== S/4HANA VENDOR SYNC (placeholder for now) ====================
+  // ==================== S/4HANA VENDOR SYNC ====================
   this.on('syncVendorsFromS4', async (req) => {
-    return req.error(501, 'S/4HANA sync not yet implemented — coming in integration step');
+    try {
+      const S4 = await cds.connect.to('API_BUSINESS_PARTNER');
+
+      const suppliers = await S4.run(
+        SELECT.from('A_Supplier')
+          .columns('Supplier', 'SupplierName', 'SupplierFullName')
+          .limit(15)
+      );
+
+      let created = 0, updated = 0;
+
+      for (const s of suppliers) {
+        const externalId = s.Supplier;
+        const vendorName = s.SupplierFullName || s.SupplierName || 'Unknown Supplier';
+
+        const existing = await SELECT.one.from(Vendors).where({ externalSystemId: externalId });
+
+        if (existing) {
+          await UPDATE(Vendors).set({ vendorName }).where({ externalSystemId: externalId });
+          updated++;
+        } else {
+          await INSERT.into(Vendors).entries({
+            vendorName,
+            externalSystemId: externalId,
+            status: 'PENDING',
+            country: 'US',
+            currency: 'USD'
+          });
+          created++;
+        }
+      }
+
+      return `Vendor sync completed successfully! Total: ${suppliers.length}, Created: ${created}, Updated: ${updated}`;
+    } catch (err) {
+      console.error('S4 Sync Error:', err.message);
+      return req.error(500, 'Failed to connect to S/4HANA system. Please check destination configuration.');
+    }
   });
 
 });

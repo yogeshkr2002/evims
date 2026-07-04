@@ -2,6 +2,9 @@
   "name": "evims",
   "version": "1.0.0",
   "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^4.7.0",
+    "@sap-cloud-sdk/http-client": "^4.7.0",
+    "@sap-cloud-sdk/resilience": "^4.7.0",
     "@sap/cds": "^9"
   },
   "devDependencies": {
@@ -12,17 +15,51 @@
     "start": "cds-serve"
   },
   "private": true,
-"cds": {
-  "requires": {
-    "auth": {
-      "kind": "mocked",
-      "users": {
-        "admin": { "password": "admin", "roles": ["Admin"] },
-        "manager": { "password": "manager", "roles": ["VendorManager"] },
-        "approver": { "password": "approver", "roles": ["Approver"] },
-        "viewer": { "password": "viewer", "roles": ["Viewer"] }
+  "cds": {
+    "requires": {
+      "[development]": {
+        "auth": {
+          "kind": "mocked",
+          "users": {
+            "admin": {
+              "password": "admin",
+              "roles": [
+                "Admin"
+              ]
+            },
+            "manager": {
+              "password": "manager",
+              "roles": [
+                "VendorManager"
+              ]
+            },
+            "approver": {
+              "password": "approver",
+              "roles": [
+                "Approver"
+              ]
+            },
+            "viewer": {
+              "password": "viewer",
+              "roles": [
+                "Viewer"
+              ]
+            }
+          }
+        }
+      },
+      "[production]": {
+        "db": "hana",
+        "auth": "xsuaa"
+      },
+      "destinations": true,
+      "API_BUSINESS_PARTNER": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_BUSINESS_PARTNER",
+        "credentials": {
+          "destination": "S4HANA"
+        }
       }
     }
   }
-}
 }
