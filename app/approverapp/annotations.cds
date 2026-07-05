@@ -1,15 +1,15 @@
-using AdminService as service from '../../srv/services';
+using ApproverService as service from '../../srv/services';
 
 annotate service.Invoices with @(
 
-    UI.HeaderInfo                 : {
+    UI.HeaderInfo                : {
         TypeName      : 'Invoice',
         TypeNamePlural: 'Invoices',
         Title         : {Value: invoiceNumber},
         Description   : {Value: status},
     },
 
-    UI.FieldGroup #GeneratedGroup : {
+    UI.FieldGroup #GeneralGroup   : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
@@ -18,10 +18,9 @@ annotate service.Invoices with @(
                 Value: invoiceNumber
             },
             {
-                $Type : 'UI.DataFieldWithNavigationPath',
-                Label : 'Vendor',
-                Value : vendor.vendorName,
-                Target: vendor
+                $Type: 'UI.DataField',
+                Label: 'Vendor',
+                Value: vendor.vendorName
             },
             {
                 $Type: 'UI.DataField',
@@ -51,22 +50,6 @@ annotate service.Invoices with @(
             },
             {
                 $Type: 'UI.DataField',
-                Label: 'Created By',
-                Value: createdBy
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Created At',
-                Value: createdAt
-            },
-        ],
-    },
-
-    UI.FieldGroup #SubmissionGroup: {
-        $Type: 'UI.FieldGroupType',
-        Data : [
-            {
-                $Type: 'UI.DataField',
                 Label: 'Submitted By',
                 Value: submittedBy
             },
@@ -75,6 +58,12 @@ annotate service.Invoices with @(
                 Label: 'Submitted At',
                 Value: submittedAt
             },
+        ],
+    },
+
+    UI.FieldGroup #DecisionGroup  : {
+        $Type: 'UI.FieldGroupType',
+        Data : [
             {
                 $Type: 'UI.DataField',
                 Label: 'Approved By',
@@ -108,18 +97,18 @@ annotate service.Invoices with @(
         ],
     },
 
-    UI.Facets                     : [
+    UI.Facets                    : [
         {
             $Type : 'UI.ReferenceFacet',
             ID    : 'GeneralInfoFacet',
             Label : 'General Information',
-            Target: '@UI.FieldGroup#GeneratedGroup',
+            Target: '@UI.FieldGroup#GeneralGroup',
         },
         {
             $Type : 'UI.ReferenceFacet',
-            ID    : 'SubmissionFacet',
-            Label : 'Workflow Details',
-            Target: '@UI.FieldGroup#SubmissionGroup',
+            ID    : 'DecisionFacet',
+            Label : 'Decision Details',
+            Target: '@UI.FieldGroup#DecisionGroup',
         },
         {
             $Type : 'UI.ReferenceFacet',
@@ -141,27 +130,21 @@ annotate service.Invoices with @(
         },
     ],
 
-    UI.LineItem                   : [
+    UI.LineItem                  : [
         {
             $Type: 'UI.DataField',
             Label: 'Invoice Number',
             Value: invoiceNumber
         },
         {
-            $Type : 'UI.DataFieldWithNavigationPath',
-            Label : 'Vendor',
-            Value : vendor.vendorName,
-            Target: vendor
+            $Type: 'UI.DataField',
+            Label: 'Vendor',
+            Value: vendor.vendorName
         },
         {
             $Type: 'UI.DataField',
             Label: 'Invoice Date',
             Value: invoiceDate
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Due Date',
-            Value: dueDate
         },
         {
             $Type: 'UI.DataField',
@@ -181,11 +164,6 @@ annotate service.Invoices with @(
         },
         {
             $Type     : 'UI.DataField',
-            Value     : canSubmit,
-            @UI.Hidden: true
-        },
-        {
-            $Type     : 'UI.DataField',
             Value     : canApprove,
             @UI.Hidden: true
         },
@@ -196,20 +174,14 @@ annotate service.Invoices with @(
         },
         {
             $Type                     : 'UI.DataFieldForAction',
-            Label                     : 'Submit for Approval',
-            Action                    : 'AdminService.submitForApproval',
-            ![Core.OperationAvailable]: canSubmit,
-        },
-        {
-            $Type                     : 'UI.DataFieldForAction',
             Label                     : 'Approve',
-            Action                    : 'AdminService.approve',
+            Action                    : 'ApproverService.approve',
             ![Core.OperationAvailable]: canApprove,
         },
         {
             $Type                     : 'UI.DataFieldForAction',
             Label                     : 'Reject',
-            Action                    : 'AdminService.rejectInvoice',
+            Action                    : 'ApproverService.rejectInvoice',
             ![Core.OperationAvailable]: canReject,
         },
     ],
@@ -218,118 +190,27 @@ annotate service.Invoices with @(
     UI.Identification             : [
         {
             $Type                     : 'UI.DataFieldForAction',
-            Label                     : 'Submit for Approval',
-            Action                    : 'AdminService.submitForApproval',
-            ![Core.OperationAvailable]: canSubmit,
-        },
-        {
-            $Type                     : 'UI.DataFieldForAction',
             Label                     : 'Approve',
-            Action                    : 'AdminService.approve',
+            Action                    : 'ApproverService.approve',
             ![Core.OperationAvailable]: canApprove,
         },
         {
             $Type                     : 'UI.DataFieldForAction',
             Label                     : 'Reject',
-            Action                    : 'AdminService.rejectInvoice',
+            Action                    : 'ApproverService.rejectInvoice',
             ![Core.OperationAvailable]: canReject,
         },
     ],
 
+    UI.SelectionFields            : [
+        vendor_ID,
+        status,
+        invoiceDate
+    ],
+
     UI.HeaderFacets               : [{
         $Type : 'UI.ReferenceFacet',
-        Target: '@UI.FieldGroup#SubmissionGroup',
-    }, ],
-);
-
-annotate service.Invoices with {
-    vendor @Common.ValueList: {
-        $Type         : 'Common.ValueListType',
-        CollectionPath: 'Vendors',
-        Parameters    : [
-            {
-                $Type            : 'Common.ValueListParameterInOut',
-                LocalDataProperty: vendor_ID,
-                ValueListProperty: 'ID'
-            },
-            {
-                $Type            : 'Common.ValueListParameterDisplayOnly',
-                ValueListProperty: 'vendorName'
-            },
-            {
-                $Type            : 'Common.ValueListParameterDisplayOnly',
-                ValueListProperty: 'email'
-            },
-            {
-                $Type            : 'Common.ValueListParameterDisplayOnly',
-                ValueListProperty: 'status'
-            },
-        ],
-    };
-};
-
-annotate service.Vendors with @(
-    UI.HeaderInfo             : {
-        TypeName      : 'Vendor',
-        TypeNamePlural: 'Vendors',
-        Title         : {Value: vendorName},
-        Description   : {Value: status},
-    },
-    UI.FieldGroup #VendorGroup: {
-        $Type: 'UI.FieldGroupType',
-        Data : [
-            {
-                $Type: 'UI.DataField',
-                Label: 'Vendor Name',
-                Value: vendorName
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Email',
-                Value: email
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Phone',
-                Value: phone
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Address',
-                Value: addressLine1
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'City',
-                Value: city
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Country',
-                Value: country
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Currency',
-                Value: currency
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Tax ID',
-                Value: taxId
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Status',
-                Value: status
-            },
-        ],
-    },
-    UI.Facets                 : [{
-        $Type : 'UI.ReferenceFacet',
-        ID    : 'VendorInfoFacet',
-        Label : 'Vendor Information',
-        Target: '@UI.FieldGroup#VendorGroup',
+        Target: '@UI.FieldGroup#DecisionGroup',
     }, ],
 );
 
@@ -406,44 +287,3 @@ annotate service.ApprovalHistory with @(UI.LineItem: [
         Value: comments
     },
 ], );
-
-annotate service.InvoiceAnalytics with @(
-    UI.HeaderInfo     : {
-        TypeName      : 'Invoice Analytics',
-        TypeNamePlural: 'Invoice Analytics',
-    },
-    UI.LineItem       : [
-        {
-            $Type: 'UI.DataField',
-            Label: 'Vendor',
-            Value: vendorName
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Status',
-            Value: status
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Currency',
-            Value: currency
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Total Invoices',
-            Value: totalInvoices
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Total Amount',
-            Value: totalAmount
-        },
-    ],
-    UI.SelectionFields: [
-        status,
-        currency
-    ],
-);
-
-
-annotate service.Invoices with @(Capabilities.InsertRestrictions.Insertable: true);

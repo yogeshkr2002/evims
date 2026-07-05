@@ -1,7 +1,7 @@
 {
   "_version": "1.85.0",
   "sap.app": {
-    "id": "invoicemanagement",
+    "id": "viewerapp",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,11 +13,11 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.27.0",
-      "toolsId": "2f0ec6e2-df46-4f91-9278-8d93f761a988"
+      "toolsId": "e0145100-7823-4702-80e5-fde7dfd35a47"
     },
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/admin/",
+        "uri": "/odata/v4/viewer/",
         "type": "OData",
         "settings": {
           "annotations": [],
@@ -60,7 +60,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "invoicemanagement.i18n.i18n"
+          "bundleName": "viewerapp.i18n.i18n"
         }
       },
       "": {
@@ -97,11 +97,6 @@
           "pattern": "Invoices({key})/items({key2}):?query:",
           "name": "InvoiceItemsObjectPage",
           "target": "InvoiceItemsObjectPage"
-        },
-        {
-          "pattern": "Vendors({key}):?query:",
-          "name": "VendorsObjectPage",
-          "target": "VendorsObjectPage"
         },
         {
           "pattern": "InvoiceAnalytics:?query:",
@@ -144,11 +139,6 @@
               "editableHeaderContent": false,
               "contextPath": "/Invoices",
               "navigation": {
-                "vendor": {
-                  "detail": {
-                    "route": "VendorsObjectPage"
-                  }
-                },
                 "items": {
                   "detail": {
                     "route": "InvoiceItemsObjectPage"
@@ -166,17 +156,6 @@
             "settings": {
               "editableHeaderContent": false,
               "contextPath": "/Invoices/items"
-            }
-          }
-        },
-        "VendorsObjectPage": {
-          "type": "Component",
-          "id": "VendorsObjectPage",
-          "name": "sap.fe.templates.ObjectPage",
-          "options": {
-            "settings": {
-              "editableHeaderContent": false,
-              "contextPath": "/Vendors"
             }
           }
         },

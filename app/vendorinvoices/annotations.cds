@@ -1,4 +1,4 @@
-using AdminService as service from '../../srv/services';
+using VendorManagerService as service from '../../srv/services';
 
 annotate service.Invoices with @(
 
@@ -74,21 +74,6 @@ annotate service.Invoices with @(
                 $Type: 'UI.DataField',
                 Label: 'Submitted At',
                 Value: submittedAt
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Approved By',
-                Value: approvedBy
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Approved At',
-                Value: approvedAt
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Approval Comments',
-                Value: approvalComments
             },
             {
                 $Type: 'UI.DataField',
@@ -185,58 +170,30 @@ annotate service.Invoices with @(
             @UI.Hidden: true
         },
         {
-            $Type     : 'UI.DataField',
-            Value     : canApprove,
-            @UI.Hidden: true
-        },
-        {
-            $Type     : 'UI.DataField',
-            Value     : canReject,
-            @UI.Hidden: true
-        },
-        {
             $Type                     : 'UI.DataFieldForAction',
             Label                     : 'Submit for Approval',
-            Action                    : 'AdminService.submitForApproval',
+            Action                    : 'VendorManagerService.submitForApproval',
             ![Core.OperationAvailable]: canSubmit,
-        },
-        {
-            $Type                     : 'UI.DataFieldForAction',
-            Label                     : 'Approve',
-            Action                    : 'AdminService.approve',
-            ![Core.OperationAvailable]: canApprove,
-        },
-        {
-            $Type                     : 'UI.DataFieldForAction',
-            Label                     : 'Reject',
-            Action                    : 'AdminService.rejectInvoice',
-            ![Core.OperationAvailable]: canReject,
         },
     ],
 
     // Buttons on the Object Page header itself (List Report toolbar alone is not enough)
-    UI.Identification             : [
+    UI.Identification              : [
         {
             $Type                     : 'UI.DataFieldForAction',
             Label                     : 'Submit for Approval',
-            Action                    : 'AdminService.submitForApproval',
+            Action                    : 'VendorManagerService.submitForApproval',
             ![Core.OperationAvailable]: canSubmit,
-        },
-        {
-            $Type                     : 'UI.DataFieldForAction',
-            Label                     : 'Approve',
-            Action                    : 'AdminService.approve',
-            ![Core.OperationAvailable]: canApprove,
-        },
-        {
-            $Type                     : 'UI.DataFieldForAction',
-            Label                     : 'Reject',
-            Action                    : 'AdminService.rejectInvoice',
-            ![Core.OperationAvailable]: canReject,
         },
     ],
 
-    UI.HeaderFacets               : [{
+    UI.SelectionFields             : [
+        vendor_ID,
+        status,
+        invoiceDate
+    ],
+
+    UI.HeaderFacets                : [{
         $Type : 'UI.ReferenceFacet',
         Target: '@UI.FieldGroup#SubmissionGroup',
     }, ],
@@ -259,10 +216,6 @@ annotate service.Invoices with {
             {
                 $Type            : 'Common.ValueListParameterDisplayOnly',
                 ValueListProperty: 'email'
-            },
-            {
-                $Type            : 'Common.ValueListParameterDisplayOnly',
-                ValueListProperty: 'status'
             },
         ],
     };
@@ -295,16 +248,6 @@ annotate service.Vendors with @(
             },
             {
                 $Type: 'UI.DataField',
-                Label: 'Address',
-                Value: addressLine1
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'City',
-                Value: city
-            },
-            {
-                $Type: 'UI.DataField',
                 Label: 'Country',
                 Value: country
             },
@@ -312,11 +255,6 @@ annotate service.Vendors with @(
                 $Type: 'UI.DataField',
                 Label: 'Currency',
                 Value: currency
-            },
-            {
-                $Type: 'UI.DataField',
-                Label: 'Tax ID',
-                Value: taxId
             },
             {
                 $Type: 'UI.DataField',
@@ -406,44 +344,3 @@ annotate service.ApprovalHistory with @(UI.LineItem: [
         Value: comments
     },
 ], );
-
-annotate service.InvoiceAnalytics with @(
-    UI.HeaderInfo     : {
-        TypeName      : 'Invoice Analytics',
-        TypeNamePlural: 'Invoice Analytics',
-    },
-    UI.LineItem       : [
-        {
-            $Type: 'UI.DataField',
-            Label: 'Vendor',
-            Value: vendorName
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Status',
-            Value: status
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Currency',
-            Value: currency
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Total Invoices',
-            Value: totalInvoices
-        },
-        {
-            $Type: 'UI.DataField',
-            Label: 'Total Amount',
-            Value: totalAmount
-        },
-    ],
-    UI.SelectionFields: [
-        status,
-        currency
-    ],
-);
-
-
-annotate service.Invoices with @(Capabilities.InsertRestrictions.Insertable: true);

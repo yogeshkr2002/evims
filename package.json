@@ -14,7 +14,10 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "watch-invoicemanagement": "cds watch --open invoicemanagement/index.html?sap-ui-xx-viewCache=false --livereload false"
+    "watch-invoicemanagement": "cds watch --open invoicemanagement/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-vendorinvoices": "cds watch --open vendorinvoices/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-approverapp": "cds watch --open approverapp/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-viewerapp": "cds watch --open viewerapp/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
   "private": true,
   "cds": {
@@ -68,6 +71,9 @@
     "app/*"
   ],
   "sapux": [
-    "app/invoicemanagement"
+    "app/invoicemanagement",
+    "app/vendorinvoices",
+    "app/approverapp",
+    "app/viewerapp"
   ]
 }
